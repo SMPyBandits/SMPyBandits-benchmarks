@@ -22,9 +22,9 @@ algorithm_map = {
     "BayesUCB": Policies.BayesUCB,
 }
 
-values_algorithm = list(algorithm_map.keys()),
+values_algorithm = list(algorithm_map.keys())
 values_nbArms = [2, 3, 4] #, 8, 12, 16, 24, 32, 48, 64]
-values_horizon = [100, 250],  #, 250, 500, 750, 1000, 2000],
+values_horizon = [100, 250]  #, 250, 500, 750, 1000, 2000],
 
 print("values_algorithm =", values_algorithm)  # DEBUG
 print("values_nbArms =", values_nbArms)  # DEBUG

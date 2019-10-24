@@ -1,4 +1,4 @@
-default:	pull run publish preview
+default:	pull run_stderr publish preview
 
 pull:
 	git pull

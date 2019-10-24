@@ -48,7 +48,7 @@ class SMPyBanditsSuite:
     ]
 
     def setup(self, algorithm, nbArms, horizon):
-        self.MAB = SMPyBandits.Environment.MAB({'arm_type': Arms.Bernoulli, 'params': tuple(np.arange(0.1, 0.9, nbArms))})
+        self.MAB = SMPyBandits.Environment.MAB({'arm_type': Arms.Bernoulli, 'params': tuple(np.linspace(0.1, 0.9, nbArms))})
         self.algorithm = algorithm_map[algorithm]
         self.nbArms = nbArms
         self.horizon = horizon
@@ -59,7 +59,7 @@ class SMPyBanditsSuite:
         return alg
 
     def time_choice(self, algorithm, nbArms, horizon):
-        self.MAB = SMPyBandits.Environment.MAB({'arm_type': Arms.Bernoulli, 'params': tuple(np.arange(0.1, 0.9, nbArms))})
+        self.MAB = SMPyBandits.Environment.MAB({'arm_type': Arms.Bernoulli, 'params': tuple(np.linspace(0.1, 0.9, nbArms))})
         alg = self.algorithm(nbArms)
         alg.startGame()
         for t in range(horizon):
@@ -68,7 +68,7 @@ class SMPyBanditsSuite:
             # alg.getReward(arm, reward)
 
     def time_choice_and_getReward(self, algorithm, nbArms, horizon):
-        self.MAB = SMPyBandits.Environment.MAB({'arm_type': Arms.Bernoulli, 'params': tuple(np.arange(0.1, 0.9, nbArms))})
+        self.MAB = SMPyBandits.Environment.MAB({'arm_type': Arms.Bernoulli, 'params': tuple(np.linspace(0.1, 0.9, nbArms))})
         alg = self.algorithm(nbArms)
         alg.startGame()
         for t in range(horizon):
@@ -77,7 +77,7 @@ class SMPyBanditsSuite:
             alg.getReward(arm, reward)
 
     def time_getReward(self, algorithm, nbArms, horizon):
-        self.MAB = SMPyBandits.Environment.MAB({'arm_type': Arms.Bernoulli, 'params': tuple(np.arange(0.1, 0.9, nbArms))})
+        self.MAB = SMPyBandits.Environment.MAB({'arm_type': Arms.Bernoulli, 'params': tuple(np.linspace(0.1, 0.9, nbArms))})
         alg = self.algorithm(nbArms)
         alg.startGame()
         for t in range(horizon):

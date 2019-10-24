@@ -51,6 +51,10 @@ setup(name="test-of-airspeed-velocity",
     #     "",
     # ],
     install_requires=[
+        "numpy",
+        "scipy",
+        "tqdm",
+        "numba",
         "SMPyBandits",
     ],
     package_data={

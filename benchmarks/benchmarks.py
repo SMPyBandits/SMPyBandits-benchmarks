@@ -9,9 +9,10 @@ class TimeSuite:
     """
     params = [100, 500, 1000, 5000]
 
-    def setup(self):
+    def setup(self, n):
+        self.n = n
         self.d = {}
-        for x in range(500):
+        for x in range(self.n):
             self.d[x] = None
 
     def time_keys(self):
@@ -20,7 +21,7 @@ class TimeSuite:
 
     def time_range(self):
         d = self.d
-        for key in range(500):
+        for key in range(self.n):
             x = d[key]
 
 

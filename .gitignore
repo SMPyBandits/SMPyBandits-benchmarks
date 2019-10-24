@@ -4,4 +4,6 @@ bin
 .asv
 *~
 *.pyc
-__pycache__
+test-of-airspeed-velocity
+**/__pycache__/
+benchmarks/__pycache__/

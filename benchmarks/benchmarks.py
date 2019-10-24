@@ -8,18 +8,30 @@ import SMPyBandits.Policies
 algorithm_map = {
     "Uniform": SMPyBandits.Policies.Uniform,
     "UCB": SMPyBandits.Policies.UCB,
+    "EpsilonDecreasing": SMPyBandits.Policies.EpsilonDecreasing,
+    "SoftmaxDecreasing": SMPyBandits.Policies.SoftmaxDecreasing,
+    "Exp3PlusPlus": SMPyBandits.Policies.Exp3PlusPlus,
+    "Thompson": SMPyBandits.Policies.Thompson,
     "klUCB": SMPyBandits.Policies.klUCB,
     "BESA": SMPyBandits.Policies.BESA,
+    "RCB": SMPyBandits.Policies.RCB,
+    "PHE": SMPyBandits.Policies.PHE,
+    "BayesUCB": SMPyBandits.Policies.BayesUCB,
 }
+
+values_algorithm = list(algorithm_map.keys()),
+values_nbArms = [2, 3, 4] #, 8, 12, 16, 24, 32, 48, 64]
+values_horizon = [100],  #, 250, 500, 750, 1000, 2000],
+
 
 class SMPyBanditsSuite:
     """
     A benchmark of SMPyBandits Policies. In progress.
     """
     params = (
-        ("Uniform", "UCB", "klUCB", "BESA"),
-        (2, 3), #8, 16, 32, 64),
-        (100, 150), # 500, 1000, 5000),
+        values_algorithm,
+        values_nbArms,
+        values_horizon,
     )
     params_names = (
         "algorithm",
@@ -45,35 +57,3 @@ class SMPyBanditsSuite:
             reward = 0  # FIXME
             alg.getReward(arm, reward)
 
-
-class TimeSuite:
-    """
-    An example benchmark that times the performance of various kinds
-    of iterating over dictionaries in Python.
-    """
-    params = [100, 500, 1000, 5000]
-
-    def setup(self, n):
-        self.n = n
-        self.d = {}
-        for x in range(self.n):
-            self.d[x] = None
-
-    def time_keys(self, n):
-        for key in self.d.keys():
-            pass
-
-    def time_range(self, n):
-        d = self.d
-        for key in range(n):
-            x = d[key]
-
-
-class MemSuite:
-    params = [100, 500, 1000, 5000]
-
-    def setup(self, n):
-        self.n = n
-
-    def mem_list(self, n):
-        return [0] * n

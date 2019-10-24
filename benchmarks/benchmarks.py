@@ -80,6 +80,10 @@ class SMPyBandits_Policies:
     def mem_createAlgorithm(self, algname, nbArms, horizon):
         alg = algorithm_map[algname](self.nbArms)
         alg.startGame()
+        for t in range(horizon):
+            arm = alg.choice()
+            reward = self.MAB.draw(arm)
+            alg.getReward(arm, reward)
         return alg
 
     def time_choice(self, algname, nbArms, horizon):

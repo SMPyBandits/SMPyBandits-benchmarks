@@ -26,21 +26,26 @@ values_algorithm = list(algorithm_map.keys()),
 values_nbArms = [2, 3, 4] #, 8, 12, 16, 24, 32, 48, 64]
 values_horizon = [100, 250],  #, 250, 500, 750, 1000, 2000],
 
+print("values_algorithm =", values_algorithm)  # DEBUG
+print("values_nbArms =", values_nbArms)  # DEBUG
+print("values_horizon =", values_horizon)  # DEBUG
+
 
 class SMPyBanditsSuite:
     """
     A benchmark of SMPyBandits Policies. In progress.
     """
-    params = (
+    timeout = 120
+    params = [
         values_algorithm,
         values_nbArms,
         values_horizon,
-    )
-    param_names = (
+    ]
+    param_names = [
         "algorithm",
         "nbArms",
         "horizon",
-    )
+    ]
 
     def setup(self, algorithm, nbArms, horizon):
         configuration = {

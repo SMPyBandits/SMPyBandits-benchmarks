@@ -26,8 +26,23 @@ algorithm_map = {
 }
 
 values_algorithm = list(algorithm_map.keys())
-values_nbArms = [2, 3, 4] #, 8, 12, 16, 24, 32, 48, 64]
-values_horizon = [100, 250, 500]  #, 250, 500, 750, 1000, 2000],
+
+values_nbArms = [2, 3, 4, 5, 6, 7, 8, 9] #, 8, 12, 16, 24, 32, 48, 64]
+max_nbArms = 32
+values_nbArms = list(range(2, max_nbArms + 1))
+
+values_horizon = [100, 250, 500, 750]  #, 250, 500, 750, 1000, 2000],
+values_horizon += [
+    1000, 1250, 1500, 1750,
+    2000, 2250, 2500, 2750,
+    3000, 3250, 3500, 3750,
+    4000, 4250, 4500, 4750,
+    5000, 5250, 5500, 5750,
+    6000, 6250, 6500, 6750,
+    7000, 7250, 7500, 7750,
+    8000, 8250, 8500, 8750,
+    9000, 9250, 9500, 9750,
+]
 
 print("values_algorithm =", values_algorithm)  # DEBUG
 print("values_nbArms =", values_nbArms)  # DEBUG
@@ -40,10 +55,10 @@ class SMPyBandits_Policies:
 
     - https://asv.readthedocs.io/en/stable/benchmarks.html#timing-benchmarks
     """
-    processes = 2
+    processes = 32
     # repeat = (10, 50, 1200)
     # number = 100
-    timeout = 120
+    timeout = 1200
 
     params = [
         values_algorithm,
@@ -58,7 +73,7 @@ class SMPyBandits_Policies:
 
     def setup(self, algname, nbArms, horizon):
         self.MAB = SMPyBandits.Environment.MAB({'arm_type': Arms.Bernoulli, 'params': tuple(np.linspace(0.1, 0.9, nbArms))})
-        self.algorithm = algorithm_map[algorithm]
+        self.algorithm = algorithm_map[algname]
         self.nbArms = nbArms
         self.horizon = horizon
 

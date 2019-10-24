@@ -15,13 +15,13 @@ class TimeSuite:
         for x in range(self.n):
             self.d[x] = None
 
-    def time_keys(self):
+    def time_keys(self, n):
         for key in self.d.keys():
             pass
 
-    def time_range(self):
+    def time_range(self, n):
         d = self.d
-        for key in range(self.n):
+        for key in range(n):
             x = d[key]
 
 
@@ -31,5 +31,5 @@ class MemSuite:
     def setup(self, n):
         self.n = n
 
-    def mem_list(self):
-        return [0] * self.n
+    def mem_list(self, n):
+        return [0] * n

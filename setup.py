@@ -51,6 +51,7 @@ setup(name="test-of-airspeed-velocity",
     #     "",
     # ],
     install_requires=[
+        "SMPyBandits",
     ],
     package_data={
     },

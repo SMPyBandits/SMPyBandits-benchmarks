@@ -78,7 +78,7 @@ class SMPyBandits_Policies:
         self.horizon = horizon
 
     def mem_createAlgorithm(self, algname, nbArms, horizon):
-        alg = self.algorithm(self.nbArms)
+        alg = algorithm_map[algname](self.nbArms)
         alg.startGame()
         return alg
 

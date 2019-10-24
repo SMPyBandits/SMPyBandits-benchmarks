@@ -18,8 +18,8 @@ class SMPyBanditsSuite:
     """
     params = (
         ("Uniform", "UCB", "klUCB", "BESA"),
-        (2, 8, 16, 32, 64),
-        (100, 500, 1000, 5000),
+        (2, 3), #8, 16, 32, 64),
+        (100, 150), # 500, 1000, 5000),
     )
     params_names = (
         "algorithm",

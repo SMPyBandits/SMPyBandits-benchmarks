@@ -1,0 +1,7 @@
+lib
+include
+bin
+.asv
+*~
+*.pyc
+__pycache__

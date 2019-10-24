@@ -1,5 +1,7 @@
-default:	run
+default:	pull run publish preview
 
+pull:
+	git pull
 help:
 	asv help
 quickstart:

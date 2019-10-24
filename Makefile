@@ -1,3 +1,5 @@
+default:	run
+
 help:
 	asv help
 quickstart:

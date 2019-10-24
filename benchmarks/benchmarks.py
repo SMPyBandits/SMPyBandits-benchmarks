@@ -11,15 +11,15 @@ from SMPyBandits.Environment import MAB
 algorithm_map = {
     "Uniform": Policies.Uniform,
     "UCB": Policies.UCB,
-    "EpsilonDecreasing": Policies.EpsilonDecreasing,
-    "SoftmaxDecreasing": Policies.SoftmaxDecreasing,
-    "Exp3PlusPlus": Policies.Exp3PlusPlus,
-    "Thompson": Policies.Thompson,
-    "klUCB": Policies.klUCB,
-    "BESA": Policies.BESA,
-    "RCB": Policies.RCB,
-    "PHE": Policies.PHE,
-    "BayesUCB": Policies.BayesUCB,
+    # "EpsilonDecreasing": Policies.EpsilonDecreasing,
+    # "SoftmaxDecreasing": Policies.SoftmaxDecreasing,
+    # "Exp3PlusPlus": Policies.Exp3PlusPlus,
+    # "Thompson": Policies.Thompson,
+    # "klUCB": Policies.klUCB,
+    # "BESA": Policies.BESA,
+    # "RCB": Policies.RCB,
+    # "PHE": Policies.PHE,
+    # "BayesUCB": Policies.BayesUCB,
 }
 
 values_algorithm = list(algorithm_map.keys())

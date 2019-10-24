@@ -9,9 +9,9 @@ machine:
 setup:
 	asv setup
 run:
-	asv run --show-stderr
-run_nostderr:
 	asv run
+run_stderr:
+	asv run --show-stderr
 dev:
 	asv dev
 continuous:

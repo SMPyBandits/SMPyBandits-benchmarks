@@ -78,7 +78,7 @@ print("values_horizon =", values_horizon)  # DEBUG
 
 
 
-class SMPyBandits_Policies:
+class SMPyBandits_PoliciesSinglePlayer:
     """
     A benchmark of SMPyBandits Policies. In progress.
 

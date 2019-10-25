@@ -130,7 +130,7 @@ class SMPyBandits_PoliciesMultiPlayers:
             # chose one arm, for each player
             choices = [ children[i].choice() for i in range(nbPlayers) ]
             for k in range(nbArms):
-                players_who_played_k = [ k_t[i] for i in range(nbPlayers) if k_t[i] == k ]
+                players_who_played_k = [ choices[i] for i in range(nbPlayers) if choices[i] == k ]
                 reward = MAB.draw(k) if len(players_who_played_k) == 1 else 0  # sample a reward
                 for i in players_who_played_k:
                     children[i].getReward(k, reward)
@@ -154,7 +154,7 @@ class SMPyBandits_PoliciesMultiPlayers:
             # chose one arm, for each player
             choices = [ children[i].choice() for i in range(nbPlayers) ]
             for k in range(nbArms):
-                players_who_played_k = [ k_t[i] for i in range(nbPlayers) if k_t[i] == k ]
+                players_who_played_k = [ choices[i] for i in range(nbPlayers) if choices[i] == k ]
                 reward = MAB.draw(k) if len(players_who_played_k) == 1 else 0  # sample a reward
                 for i in players_who_played_k:
                     children[i].getReward(k, reward)
@@ -162,7 +162,7 @@ class SMPyBandits_PoliciesMultiPlayers:
     # ------- Tracking benchmarks -------
     # https://asv.readthedocs.io/en/stable/writing_benchmarks.html#tracking
 
-    def track_sumReward(self, algname, nbArms, nbPlayers, horizon):
+    def track_sumRewards(self, algname, nbArms, nbPlayers, horizon):
         MAB = make_MAB(nbArms)
         my_policy_MP = algorithmMP_map[algname](nbPlayers, nbArms)
         children = my_policy_MP.children             # get a list of usable single-player policies
@@ -173,20 +173,20 @@ class SMPyBandits_PoliciesMultiPlayers:
             # chose one arm, for each player
             choices = [ children[i].choice() for i in range(nbPlayers) ]
             for k in range(nbArms):
-                players_who_played_k = [ k_t[i] for i in range(nbPlayers) if k_t[i] == k ]
+                players_who_played_k = [ choices[i] for i in range(nbPlayers) if choices[i] == k ]
                 reward = MAB.draw(k) if len(players_who_played_k) == 1 else 0  # sample a reward
                 for i in players_who_played_k:
                     children[i].getReward(k, reward)
                     sumRewards[i] += reward
         return sum(sumRewards)
-    track_sumReward.unit = "sum rewards"
+    track_sumRewards.unit = "sum rewards"
 
-    def track_regret(self, algname, nbArms, nbPlayers, horizon):
+    def track_centralizedRegret(self, algname, nbArms, nbPlayers, horizon):
         MAB = make_MAB(nbArms)
-        sumRewards = self.track_sumReward(algname, nbArms, horizon)
+        sumRewards = self.track_sumRewards(algname, nbArms, nbPlayers, horizon)
         sumBestRewards = sum(MAB.Mbest(nbPlayers))
         return sumBestRewards - sumRewards
-    track_regret.unit = "regret"
+    track_centralizedRegret.unit = "centralized regret"
 
     def track_collisions(self, algname, nbArms, nbPlayers, horizon):
         MAB = make_MAB(nbArms)
@@ -199,12 +199,12 @@ class SMPyBandits_PoliciesMultiPlayers:
             # chose one arm, for each player
             choices = [ children[i].choice() for i in range(nbPlayers) ]
             for k in range(nbArms):
-                players_who_played_k = [ k_t[i] for i in range(nbPlayers) if k_t[i] == k ]
+                players_who_played_k = [ choices[i] for i in range(nbPlayers) if choices[i] == k ]
                 reward = MAB.draw(k) if len(players_who_played_k) == 1 else 0  # sample a reward
                 if len(players_who_played_k) > 1:
                     collisions[i] += 1
                 for i in players_who_played_k:
                     children[i].getReward(k, reward)
         return sum(collisions)
-    track_collisions.unit = "collision"
+    track_collisions.unit = "collisions"
 

@@ -64,7 +64,7 @@ setup(name="SMPyBandits-benchmarks",
         "scipy",
         "tqdm",
         "numba",
-        "SMPyBandits",
+        "SMPyBandits>=0.9.7",
     ],
     package_data={
     },

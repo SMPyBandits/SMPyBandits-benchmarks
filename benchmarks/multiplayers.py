@@ -70,14 +70,17 @@ values_nbPlayers = [
 values_horizonMP = [100, 250, 500, 750]  #, 250, 500, 750, 1000, 2000],
 values_horizonMP += [
     1000, 1250, 1500, 1750,
-    # 2000, 2500,  # XXX
-    # 3000, 3500,  # XXX
-    # 4000, 4500,  # XXX
-    # 5000, 5500,  # XXX
-    # 6000, 6500,  # XXX
-    # 7000, 7500,  # XXX
-    # 8000, 8500,  # XXX
-    # 9000, 9500,  # XXX
+    2000, 2500,  # XXX
+    3000, 3500,  # XXX
+    4000, 4500,  # XXX
+    5000, 5500,  # XXX
+    6000, 6500,  # XXX
+    7000, 7500,  # XXX
+    8000, 8500,  # XXX
+    9000, 9500,  # XXX
+    10000, 15000,  # XXX
+    20000, 25000,  # XXX
+    30000,  # XXX
 ]
 
 print("values_algorithmMP =", values_algorithmMP)  # DEBUG

@@ -4,14 +4,14 @@
     "version": 1,
 
     // The name of the project being benchmarked
-    "project": "test-of-airspeed-velocity",
+    "project": "SMPyBandits-benchmarks",
 
     // The project's homepage
-    "project_url": "https://github.com/Naereen/test-of-airspeed-velocity.git",
+    "project_url": "https://github.com/Naereen/SMPyBandits-benchmarks.git",
 
     // The URL or local path of the source code repository for the
     // project being benchmarked
-    "repo": "https://github.com/Naereen/test-of-airspeed-velocity.git",
+    "repo": "https://github.com/Naereen/SMPyBandits-benchmarks.git",
 
     // The Python project's subdirectory in your repo.  If missing or
     // the empty string, the project is assumed to be located at the root

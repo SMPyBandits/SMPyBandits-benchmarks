@@ -12,6 +12,10 @@ setup:
 	asv setup
 run:
 	asv run
+run_profile:
+	asv run --profile
+run_profile_stderr:
+	asv run --profile --show-stderr
 run_stderr:
 	asv run --show-stderr
 dev:

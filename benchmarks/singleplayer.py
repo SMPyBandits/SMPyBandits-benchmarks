@@ -25,6 +25,14 @@ from SMPyBandits.Environment import MAB
 from SMPyBandits import Policies
 
 
+# Tries to know number of CPU
+try:
+    from multiprocessing import cpu_count
+    CPU_COUNT = cpu_count()  #: Number of CPU on the local machine
+except ImportError:
+    CPU_COUNT = 1
+
+
 # ------------------------------------------------
 # ----------------- For Policies -----------------
 
@@ -53,27 +61,33 @@ values_algorithm = list(algorithm_map.keys())
 
 values_nbArms = [
     2,
-    3, 4, 5, 6, 7, 8, 9,
-    # 12, 16, 24, 32, 48, 64,  # TODO
 ]
-# max_nbArms = 32  # XXX
-# values_nbArms = list(range(2, max_nbArms + 1))  # XXX
+if CPU_COUNT >= 8:
+    # values_nbArms += [
+    #     3, 4, 5, 6, 7, 8, 9,
+    #     # 12, 16, 24, 32, 48, 64,  # TODO
+    # ]
+    max_nbArms = 32  # XXX
+    values_nbArms = list(range(2, max_nbArms + 1))  # XXX
 
 values_horizon = [100, 250, 500, 750]  #, 250, 500, 750, 1000, 2000],
 values_horizon += [
     1000, 1250, 1500, 1750,
-    2000, 2500,  # XXX
-    3000, 3500,  # XXX
-    4000, 4500,  # XXX
-    5000, 5500,  # XXX
-    6000, 6500,  # XXX
-    7000, 7500,  # XXX
-    8000, 8500,  # XXX
-    9000, 9500,  # XXX
-    10000, 15000,  # XXX
-    20000, 25000,  # XXX
-    30000,  # XXX
 ]
+if CPU_COUNT >= 8:
+    values_horizon += [
+        2000, 2500,  # XXX
+        3000, 3500,  # XXX
+        4000, 4500,  # XXX
+        5000, 5500,  # XXX
+        6000, 6500,  # XXX
+        7000, 7500,  # XXX
+        8000, 8500,  # XXX
+        9000, 9500,  # XXX
+        10000, 15000,  # XXX
+        20000, 25000,  # XXX
+        30000,  # XXX
+    ]
 
 print("values_algorithm =", values_algorithm)  # DEBUG
 print("values_nbArms =", values_nbArms)  # DEBUG
@@ -87,8 +101,8 @@ class SMPyBandits_PoliciesSinglePlayer:
 
     - https://asv.readthedocs.io/en/stable/benchmarks.html#timing-benchmarks
     """
-    processes = 32
-    repeat = (50, 1000, 1200)
+    processes = CPU_COUNT
+    repeat = (50, 1000 if CPU_COUNT >= 8 else 100, 1200)
     # number = 100
     timeout = 1200
 

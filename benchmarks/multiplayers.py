@@ -26,6 +26,14 @@ from SMPyBandits import Policies
 from SMPyBandits import PoliciesMultiPlayers
 
 
+# Tries to know number of CPU
+try:
+    from multiprocessing import cpu_count
+    CPU_COUNT = cpu_count()  #: Number of CPU on the local machine
+except ImportError:
+    CPU_COUNT = 1
+
+
 # ------------------------------------------------------------
 # ----------------- For PoliciesMultiPlayers -----------------
 
@@ -70,18 +78,21 @@ values_nbPlayers = [
 values_horizonMP = [100, 250, 500, 750]  #, 250, 500, 750, 1000, 2000],
 values_horizonMP += [
     1000, 1250, 1500, 1750,
-    2000, 2500,  # XXX
-    3000, 3500,  # XXX
-    4000, 4500,  # XXX
-    5000, 5500,  # XXX
-    6000, 6500,  # XXX
-    7000, 7500,  # XXX
-    8000, 8500,  # XXX
-    9000, 9500,  # XXX
-    10000, 15000,  # XXX
-    20000, 25000,  # XXX
-    30000,  # XXX
 ]
+if CPU_COUNT >= 8:
+    values_horizonMP += [
+        2000, 2500,  # XXX
+        3000, 3500,  # XXX
+        4000, 4500,  # XXX
+        5000, 5500,  # XXX
+        6000, 6500,  # XXX
+        7000, 7500,  # XXX
+        8000, 8500,  # XXX
+        9000, 9500,  # XXX
+        10000, 15000,  # XXX
+        20000, 25000,  # XXX
+        30000,  # XXX
+    ]
 
 print("values_algorithmMP =", values_algorithmMP)  # DEBUG
 print("values_nbArmsMP =", values_nbArmsMP)  # DEBUG
@@ -95,8 +106,8 @@ class SMPyBandits_PoliciesMultiPlayers:
 
     - https://asv.readthedocs.io/en/stable/benchmarks.html#timing-benchmarks
     """
-    # processes = 32
-    # repeat = (50, 1000, 1200)
+    processes = CPU_COUNT
+    repeat = (50, 1000 if CPU_COUNT >= 8 else 100, 1200)
     # number = 100
     timeout = 1200
 

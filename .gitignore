@@ -4,6 +4,7 @@ bin
 .asv
 *~
 *.pyc
-test-of-airspeed-velocity
+test-of-airspeed-velocity/
 **/__pycache__/
 benchmarks/__pycache__/
+SMPyBandits-benchmarks/

@@ -28,6 +28,10 @@ from SMPyBandits import Policies
 # ------------------------------------------------
 # ----------------- For Policies -----------------
 
+min_arm, max_arm = 0.1, 0.9
+make_MAB = lambda nbArms: SMPyBandits.Environment.MAB({'arm_type': Arms.Bernoulli, 'params': tuple(np.linspace(min_arm, max_arm, nbArms))})
+
+
 algorithm_map = {
     "Uniform": Policies.Uniform,
     "UCB": Policies.UCB,
@@ -71,9 +75,6 @@ values_horizon += [
 print("values_algorithm =", values_algorithm)  # DEBUG
 print("values_nbArms =", values_nbArms)  # DEBUG
 print("values_horizon =", values_horizon)  # DEBUG
-
-min_arm, max_arm = 0.1, 0.9
-make_MAB = lambda nbArms: SMPyBandits.Environment.MAB({'arm_type': Arms.Bernoulli, 'params': tuple(np.linspace(min_arm, max_arm, nbArms))})
 
 
 

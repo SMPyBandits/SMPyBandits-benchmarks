@@ -29,6 +29,14 @@ from SMPyBandits import PoliciesMultiPlayers
 # ------------------------------------------------------------
 # ----------------- For PoliciesMultiPlayers -----------------
 
+min_arm, max_arm = 0.1, 0.9
+make_MAB = lambda nbArms: SMPyBandits.Environment.MAB({'arm_type': Arms.Bernoulli, 'params': tuple(np.linspace(min_arm, max_arm, nbArms))})
+
+
+from SMPyBandits.Policies import UCB, klUCB, Thompson
+from SMPyBandits.Policies import SIC_MMAB
+
+
 algorithmMP_map = {
     "CentralizedCycling": lambda nbPlayers, nbArms: PoliciesMultiPlayers.CentralizedCycling(nbPlayers, nbArms),
     "CentralizedMultiplePlay-UCB": lambda nbPlayers, nbArms: PoliciesMultiPlayers.CentralizedMultiplePlay(nbPlayers, nbArms, UCB),
@@ -44,10 +52,10 @@ algorithmMP_map = {
     "MCTopM-UCB": lambda nbPlayers, nbArms: PoliciesMultiPlayers.MCTopM(nbPlayers, nbArms, UCB),
     "MCTopM-klUCB": lambda nbPlayers, nbArms: PoliciesMultiPlayers.MCTopM(nbPlayers, nbArms, klUCB),
     # "MCTopM-Thompson": lambda nbPlayers, nbArms: PoliciesMultiPlayers.MCTopM(nbPlayers, nbArms, Thompson),
-    "Selfish-UCB": lambda (*args, **kwargs): PoliciesMultiPlayers.Selfish(UCB),
-    "Selfish-klUCB": lambda (*args, **kwargs): PoliciesMultiPlayers.Selfish(klUCB),
-    # "Selfish-Thompson": lambda (*args, **kwargs): PoliciesMultiPlayers.Selfish(Thompson),
-    "SIC_MMAB": lambda (*args, **kwargs): PoliciesMultiPlayers.Selfish(SIC_MMAB),
+    "Selfish-UCB": lambda nbPlayers, nbArms: PoliciesMultiPlayers.Selfish(nbPlayers, nbArms, UCB),
+    "Selfish-klUCB": lambda nbPlayers, nbArms: PoliciesMultiPlayers.Selfish(nbPlayers, nbArms, klUCB),
+    # "Selfish-Thompson": lambda nbPlayers, nbArms: PoliciesMultiPlayers.Selfish(nbPlayers, nbArms, Thompson),
+    "SIC_MMAB": lambda nbPlayers, nbArms: PoliciesMultiPlayers.Selfish(nbPlayers, nbArms, SIC_MMAB),
 }
 values_algorithmMP = list(algorithmMP_map.keys())
 
@@ -198,5 +206,5 @@ class SMPyBandits_PoliciesMultiPlayers:
                 for i in players_who_played_k:
                     children[i].getReward(k, reward)
         return sum(collisions)
-    track_bestArmChoice.unit = "collision"
+    track_collisions.unit = "collision"
 

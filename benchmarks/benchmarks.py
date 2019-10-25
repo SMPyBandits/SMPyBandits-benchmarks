@@ -164,7 +164,7 @@ class SMPyBandits_Policies:
             reward = MAB.draw(arm)
             choices[t] = arm
             alg.getReward(arm, reward)
-        bestArmChoice = sum(c == (nbArms - 1) for c in choices)
+        bestArmChoice = len([c for c in choices if c == (nbArms - 1)])
         return bestArmChoice
     track_bestArmChoice.unit = "number"
 

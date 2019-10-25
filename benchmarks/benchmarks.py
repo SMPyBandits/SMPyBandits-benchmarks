@@ -27,21 +27,21 @@ algorithm_map = {
 
 values_algorithm = list(algorithm_map.keys())
 
-values_nbArms = [2, 3, 4, 5, 6, 7, 8, 9] #, 8, 12, 16, 24, 32, 48, 64]
+values_nbArms = [2, 3, 4, 5, 6, 7, 8, 9, 12, 16, 24, 32, 48, 64]
 # max_nbArms = 32
 # values_nbArms = list(range(2, max_nbArms + 1))
 
 values_horizon = [100, 250, 500, 750]  #, 250, 500, 750, 1000, 2000],
 values_horizon += [
     1000, 1250, 1500, 1750,
-    # 2000, 2250, 2500, 2750,
-    # 3000, 3250, 3500, 3750,
-    # 4000, 4250, 4500, 4750,
-    # 5000, 5250, 5500, 5750,
-    # 6000, 6250, 6500, 6750,
-    # 7000, 7250, 7500, 7750,
-    # 8000, 8250, 8500, 8750,
-    # 9000, 9250, 9500, 9750,
+    2000, 2500,
+    3000, 3500,
+    4000, 4500,
+    5000, 5500,
+    6000, 6500,
+    7000, 7500,
+    8000, 8500,
+    9000, 9500,
 ]
 
 print("values_algorithm =", values_algorithm)  # DEBUG
@@ -86,6 +86,8 @@ class SMPyBandits_Policies:
             alg.getReward(arm, reward)
         return alg
 
+    peakmem_createAlgorithm = mem_createAlgorithm
+
     def time_choice(self, algname, nbArms, horizon):
         self.MAB = SMPyBandits.Environment.MAB({'arm_type': Arms.Bernoulli, 'params': tuple(np.linspace(0.1, 0.9, nbArms))})
         alg = algorithm_map[algname](nbArms)
@@ -126,17 +128,23 @@ class SMPyBandits_Policies:
         return sumReward
     track_sumReward.unit = "reward"
 
+    def track_regret(self, algname, nbArms, horizon):
+        sumReward = self.track_sumReward(algname, nbArms, horizon)
+        sumBestReward = self.MAB.maxArm * horizon
+        return sumBestReward - sumReward
+    track_regret.unit = "regret"
+
     def track_bestArmChoice(self, algname, nbArms, horizon):
         self.MAB = SMPyBandits.Environment.MAB({'arm_type': Arms.Bernoulli, 'params': tuple(np.linspace(0.1, 0.9, nbArms))})
         alg = algorithm_map[algname](nbArms)
         alg.startGame()
-        bestArmChoice = 0
+        choices = [-1] * horizon
         for t in range(horizon):
             arm = alg.choice()
             reward = self.MAB.draw(arm)
-            if arm == nbArms - 1:
-                bestArmChoice += 1
+            choices[t] = arm
             alg.getReward(arm, reward)
+        bestArmChoice = sum(c == (nbArms - 1) for c in choices)
         return bestArmChoice
     track_bestArmChoice.unit = "number"
 

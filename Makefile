@@ -6,9 +6,14 @@
 # - Author: Lilian Besson and contributors
 # - License: MIT
 # - Date: October 2019
+SHELL=/usr/bin/env /bin/bash
 
 
-default:	pull run_stderr publish preview
+default:	pull run_stderr publish send preview
+
+send:	send_zamok
+send_zamok:
+	CP --exclude=.git ./.asv/html/ ${Szam}phd/SMPyBandits-benchmarks/
 
 pull:
 	git pull

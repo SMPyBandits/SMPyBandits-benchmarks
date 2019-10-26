@@ -152,7 +152,6 @@ class MP:
                         children[i].handleCollision(k, sensing[k])
                     else:
                         children[i].getReward(k, reward)
-                        sumRewards[i] += reward
         return my_policy_MP
 
     # ------- Peak memory benchmarks -------
@@ -181,7 +180,6 @@ class MP:
                         children[i].handleCollision(k, sensing[k])
                     else:
                         children[i].getReward(k, reward)
-                        sumRewards[i] += reward
 
     # ------- Tracking benchmarks -------
     # https://asv.readthedocs.io/en/stable/writing_benchmarks.html#tracking

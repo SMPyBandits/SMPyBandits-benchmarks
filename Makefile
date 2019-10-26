@@ -19,8 +19,8 @@ pull:
 	git pull
 help:
 	asv help
-quickstart:
-	asv quickstart
+# quickstart:
+# 	asv quickstart
 machine:
 	asv machine
 setup:

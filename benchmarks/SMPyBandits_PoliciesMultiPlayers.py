@@ -131,23 +131,7 @@ class MP:
         self.nbPlayers = nbPlayers
         self.horizon = horizon
 
-    # ------- Memory benchmarks -------
-    # https://asv.readthedocs.io/en/stable/writing_benchmarks.html#memory
-
-    mem_createAlgorithms = track_sumRewards
-
-    # ------- Peak memory benchmarks -------
-    # https://asv.readthedocs.io/en/stable/writing_benchmarks.html#peak-memory
-
-    peakmem_createAlgorithms = mem_createAlgorithms
-
-    # ------- Timing benchmarks -------
-    # https://asv.readthedocs.io/en/stable/writing_benchmarks.html#timing
-
-    time_choice_and_getReward = track_sumRewards
-
-    # ------- Tracking benchmarks -------
-    # https://asv.readthedocs.io/en/stable/writing_benchmarks.html#tracking
+    # ------- Simulation function -------
 
     def full_simulation(self, algname, nbArms, nbPlayers, horizon):
         MAB = make_MAB(nbArms)
@@ -172,6 +156,24 @@ class MP:
                         sumRewards[i] += reward
                         children[i].getReward(k, reward)
         return sumRewards, collisions
+
+    # ------- Memory benchmarks -------
+    # https://asv.readthedocs.io/en/stable/writing_benchmarks.html#memory
+
+    mem_createAlgorithms = full_simulation
+
+    # ------- Peak memory benchmarks -------
+    # https://asv.readthedocs.io/en/stable/writing_benchmarks.html#peak-memory
+
+    peakmem_createAlgorithms = full_simulation
+
+    # ------- Timing benchmarks -------
+    # https://asv.readthedocs.io/en/stable/writing_benchmarks.html#timing
+
+    time_choice_and_getReward = full_simulation
+
+    # ------- Tracking benchmarks -------
+    # https://asv.readthedocs.io/en/stable/writing_benchmarks.html#tracking
 
     def track_sumRewards(self, algname, nbArms, nbPlayers, horizon):
         sumRewards, _ = self.full_simulation(algname, nbArms, nbPlayers, horizon)

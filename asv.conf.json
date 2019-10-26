@@ -1,3 +1,10 @@
+// A benchmark of SMPyBandits Policies, for Single-Players multi-armed Bandits algorithms.
+//
+// - Homepage for the benchmarks: https://github.com/Naereen/SMPyBandits-benchmarks/
+// - Homepage: https://SMPyBandits.GitHub.io/
+// - Author: Lilian Besson and contributors
+// - License: MIT
+// - Date: October 2019
 {
     // The version of the config file format.  Do not change, unless
     // you know what you are doing.

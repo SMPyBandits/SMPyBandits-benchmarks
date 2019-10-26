@@ -1,3 +1,13 @@
+#!/usr/bin/env make
+# A benchmark of SMPyBandits Policies, for Single-Players multi-armed Bandits algorithms.
+#
+# - Homepage for the benchmarks: https://github.com/Naereen/SMPyBandits-benchmarks/
+# - Homepage: https://SMPyBandits.GitHub.io/
+# - Author: Lilian Besson and contributors
+# - License: MIT
+# - Date: October 2019
+
+
 default:	pull run_stderr publish preview
 
 pull:

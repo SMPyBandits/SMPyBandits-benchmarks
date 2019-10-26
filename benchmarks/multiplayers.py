@@ -75,10 +75,10 @@ values_nbPlayers = [
     2, 3, 6, 9
 ]
 
-values_horizonMP = [100, 250, 500, 750]  #, 250, 500, 750, 1000, 2000],
-values_horizonMP += [
-    1000, 1250, 1500, 1750,
-]
+values_horizonMP = [100, 250, 500, 750]
+# values_horizonMP += [
+#     1000, 1250, 1500, 1750,
+# ]
 if CPU_COUNT >= 8:
     values_horizonMP += [
         2000, 2500,  # XXX
@@ -107,9 +107,9 @@ class SMPyBandits_PoliciesMultiPlayers:
     - https://asv.readthedocs.io/en/stable/benchmarks.html#timing-benchmarks
     """
     processes = CPU_COUNT
-    repeat = (10, 200 if CPU_COUNT >= 8 else 20, 4800)
-    # number = 100
-    timeout = 4800
+    # repeat = (10, 200 if CPU_COUNT >= 8 else 20, 4800)
+    # # number = 100
+    # timeout = 4800
 
     params = [
         values_algorithmMP,

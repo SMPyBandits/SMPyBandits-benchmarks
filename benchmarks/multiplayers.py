@@ -46,7 +46,7 @@ from SMPyBandits.Policies import SIC_MMAB
 
 
 algorithmMP_map = {
-    "CentralizedCycling": lambda nbPlayers, nbArms: PoliciesMultiPlayers.CentralizedCycling(nbPlayers, nbArms),
+    "CentralizedCycling": lambda nbPlayers, nbArms: PoliciesMultiPlayers.CentralizedCycling(nbArms, nbPlayers),
     "CentralizedMultiplePlay-UCB": lambda nbPlayers, nbArms: PoliciesMultiPlayers.CentralizedMultiplePlay(nbPlayers, nbArms, UCB),
     "CentralizedMultiplePlay-klUCB": lambda nbPlayers, nbArms: PoliciesMultiPlayers.CentralizedMultiplePlay(nbPlayers, nbArms, klUCB),
     # "CentralizedMultiplePlay-Thompson": lambda nbPlayers, nbArms: PoliciesMultiPlayers.CentralizedMultiplePlay(nbPlayers, nbArms, Thompson),
@@ -79,7 +79,7 @@ values_horizonMP = [100, 250, 500, 750]
 # values_horizonMP += [
 #     1000, 1250, 1500, 1750,
 # ]
-if CPU_COUNT >= 80:
+if CPU_COUNT >= 8:
     values_horizonMP += [
         2000, 2500,  # XXX
         3000, 3500,  # XXX
@@ -107,7 +107,7 @@ class SMPyBandits_PoliciesMultiPlayers:
     - https://asv.readthedocs.io/en/stable/benchmarks.html#timing-benchmarks
     """
     processes = CPU_COUNT
-    # repeat = (10, 200 if CPU_COUNT >= 80 else 20, 4800)
+    # repeat = (10, 200 if CPU_COUNT >= 8 else 20, 4800)
     # # number = 100
     # timeout = 4800
 
@@ -126,7 +126,7 @@ class SMPyBandits_PoliciesMultiPlayers:
 
     def setup(self, algname, nbArms, nbPlayers, horizon):
         self.MAB = make_MAB(nbArms)
-        self.my_policy_MP = algorithmMP_map[algname](nbPlayers, nbArms)
+        self.my_policy_MP = algorithmMP_map[algname](nbArms, nbPlayers)
         self.nbArms = nbArms
         self.nbPlayers = nbPlayers
         self.horizon = horizon
@@ -136,7 +136,7 @@ class SMPyBandits_PoliciesMultiPlayers:
 
     def mem_createAlgorithms(self, algname, nbArms, nbPlayers, horizon):
         MAB = make_MAB(nbArms)
-        my_policy_MP = algorithmMP_map[algname](nbPlayers, nbArms)
+        my_policy_MP = algorithmMP_map[algname](nbArms, nbPlayers)
         children = my_policy_MP.children             # get a list of usable single-player policies
         for one_policy in children:
             one_policy.startGame()                       # start the game
@@ -160,7 +160,7 @@ class SMPyBandits_PoliciesMultiPlayers:
 
     def time_choice_and_getReward(self, algname, nbArms, nbPlayers, horizon):
         MAB = make_MAB(nbArms)
-        my_policy_MP = algorithmMP_map[algname](nbPlayers, nbArms)
+        my_policy_MP = algorithmMP_map[algname](nbArms, nbPlayers)
         children = my_policy_MP.children             # get a list of usable single-player policies
         for one_policy in children:
             one_policy.startGame()                       # start the game
@@ -178,7 +178,7 @@ class SMPyBandits_PoliciesMultiPlayers:
 
     def track_sumRewards(self, algname, nbArms, nbPlayers, horizon):
         MAB = make_MAB(nbArms)
-        my_policy_MP = algorithmMP_map[algname](nbPlayers, nbArms)
+        my_policy_MP = algorithmMP_map[algname](nbArms, nbPlayers)
         children = my_policy_MP.children             # get a list of usable single-player policies
         for one_policy in children:
             one_policy.startGame()                       # start the game
@@ -204,7 +204,7 @@ class SMPyBandits_PoliciesMultiPlayers:
 
     def track_collisions(self, algname, nbArms, nbPlayers, horizon):
         MAB = make_MAB(nbArms)
-        my_policy_MP = algorithmMP_map[algname](nbPlayers, nbArms)
+        my_policy_MP = algorithmMP_map[algname](nbArms, nbPlayers)
         children = my_policy_MP.children             # get a list of usable single-player policies
         for one_policy in children:
             one_policy.startGame()                       # start the game

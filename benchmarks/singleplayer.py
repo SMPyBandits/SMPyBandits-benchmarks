@@ -62,7 +62,7 @@ values_algorithm = list(algorithm_map.keys())
 values_nbArms = [
     2,
 ]
-if CPU_COUNT >= 80:
+if CPU_COUNT >= 8:
     values_nbArms += [
         3, 4, 5, 6, 7, 8, 9,
         # 12, 16, 24, 32, 48, 64,  # TODO
@@ -74,7 +74,7 @@ values_horizon = [100, 250, 500, 750]
 # values_horizon += [
 #     1000, 1250, 1500, 1750,
 # ]
-if CPU_COUNT >= 80:
+if CPU_COUNT >= 8:
     values_horizon += [
         2000, 2500,  # XXX
         3000, 3500,  # XXX
@@ -102,7 +102,7 @@ class SMPyBandits_PoliciesSinglePlayer:
     - https://asv.readthedocs.io/en/stable/benchmarks.html#timing-benchmarks
     """
     processes = CPU_COUNT
-    # repeat = (10, 200 if CPU_COUNT >= 80 else 20, 4800)
+    # repeat = (10, 200 if CPU_COUNT >= 8 else 20, 4800)
     # # number = 100
     # timeout = 4800
 

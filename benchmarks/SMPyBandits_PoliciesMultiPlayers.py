@@ -134,25 +134,7 @@ class MP:
     # ------- Memory benchmarks -------
     # https://asv.readthedocs.io/en/stable/writing_benchmarks.html#memory
 
-    def mem_createAlgorithms(self, algname, nbArms, nbPlayers, horizon):
-        MAB = make_MAB(nbArms)
-        my_policy_MP = algorithmMP_map[algname](nbPlayers, nbArms)
-        children = my_policy_MP.children             # get a list of usable single-player policies
-        for one_policy in children:
-            one_policy.startGame()                       # start the game
-        for t in range(horizon):
-            # chose one arm, for each player
-            choices = [ children[i].choice() for i in range(nbPlayers) ]
-            sensing = [ MAB.draw(k) for k in range(nbArms) ]
-            for k in range(nbArms):
-                players_who_played_k = [ i for i in range(nbPlayers) if choices[i] == k ]
-                reward = sensing[k] if len(players_who_played_k) == 1 else 0  # sample a reward
-                for i in players_who_played_k:
-                    if len(players_who_played_k) > 1:
-                        children[i].handleCollision(k, sensing[k])
-                    else:
-                        children[i].getReward(k, reward)
-        return my_policy_MP
+    mem_createAlgorithms = track_sumRewards
 
     # ------- Peak memory benchmarks -------
     # https://asv.readthedocs.io/en/stable/writing_benchmarks.html#peak-memory
@@ -162,65 +144,19 @@ class MP:
     # ------- Timing benchmarks -------
     # https://asv.readthedocs.io/en/stable/writing_benchmarks.html#timing
 
-    def time_choice_and_getReward(self, algname, nbArms, nbPlayers, horizon):
-        MAB = make_MAB(nbArms)
-        my_policy_MP = algorithmMP_map[algname](nbPlayers, nbArms)
-        children = my_policy_MP.children             # get a list of usable single-player policies
-        for one_policy in children:
-            one_policy.startGame()                       # start the game
-        for t in range(horizon):
-            # chose one arm, for each player
-            choices = [ children[i].choice() for i in range(nbPlayers) ]
-            sensing = [ MAB.draw(k) for k in range(nbArms) ]
-            for k in range(nbArms):
-                players_who_played_k = [ i for i in range(nbPlayers) if choices[i] == k ]
-                reward = sensing[k] if len(players_who_played_k) == 1 else 0  # sample a reward
-                for i in players_who_played_k:
-                    if len(players_who_played_k) > 1:
-                        children[i].handleCollision(k, sensing[k])
-                    else:
-                        children[i].getReward(k, reward)
+    time_choice_and_getReward = track_sumRewards
 
     # ------- Tracking benchmarks -------
     # https://asv.readthedocs.io/en/stable/writing_benchmarks.html#tracking
 
-    def track_sumRewards(self, algname, nbArms, nbPlayers, horizon):
-        MAB = make_MAB(nbArms)
-        my_policy_MP = algorithmMP_map[algname](nbPlayers, nbArms)
-        children = my_policy_MP.children             # get a list of usable single-player policies
-        for one_policy in children:
-            one_policy.startGame()                       # start the game
-        sumRewards = [0] * nbPlayers
-        for t in range(horizon):
-            # chose one arm, for each player
-            choices = [ children[i].choice() for i in range(nbPlayers) ]
-            sensing = [ MAB.draw(k) for k in range(nbArms) ]
-            for k in range(nbArms):
-                players_who_played_k = [ i for i in range(nbPlayers) if choices[i] == k ]
-                reward = sensing[k] if len(players_who_played_k) == 1 else 0  # sample a reward
-                for i in players_who_played_k:
-                    if len(players_who_played_k) > 1:
-                        children[i].handleCollision(k, sensing[k])
-                    else:
-                        children[i].getReward(k, reward)
-                        sumRewards[i] += reward
-        return sum(sumRewards)
-    track_sumRewards.unit = "sum rewards"
-
-    def track_centralizedRegret(self, algname, nbArms, nbPlayers, horizon):
-        MAB = make_MAB(nbArms)
-        sumRewards = self.track_sumRewards(algname, nbArms, nbPlayers, horizon)
-        sumBestRewards = sum(MAB.Mbest(nbPlayers))
-        return sumBestRewards - sumRewards
-    track_centralizedRegret.unit = "centralized regret"
-
-    def track_collisions(self, algname, nbArms, nbPlayers, horizon):
+    def full_simulation(self, algname, nbArms, nbPlayers, horizon):
         MAB = make_MAB(nbArms)
         my_policy_MP = algorithmMP_map[algname](nbPlayers, nbArms)
         children = my_policy_MP.children             # get a list of usable single-player policies
         for one_policy in children:
             one_policy.startGame()                       # start the game
         collisions = [0] * nbPlayers
+        sumRewards = [0] * nbPlayers
         for t in range(horizon):
             # chose one arm, for each player
             choices = [ children[i].choice() for i in range(nbPlayers) ]
@@ -233,7 +169,38 @@ class MP:
                         collisions[i] += 1
                         children[i].handleCollision(k, sensing[k])
                     else:
+                        sumRewards[i] += reward
                         children[i].getReward(k, reward)
+        return sumRewards, collisions
+
+    def track_sumRewards(self, algname, nbArms, nbPlayers, horizon):
+        sumRewards, _ = self.full_simulation(algname, nbArms, nbPlayers, horizon)
+        return sum(sumRewards)
+    track_sumRewards.unit = "Sum rewards"
+
+    def track_meanSumRewards(self, algname, nbArms, nbPlayers, horizon):
+        sumRewards, _ = self.full_simulation(algname, nbArms, nbPlayers, horizon)
+        return sum(sumRewards) / horizon
+    track_sumRewards.unit = "Mean sum rewards"
+
+    def track_centralizedRegret(self, algname, nbArms, nbPlayers, horizon):
+        MAB = make_MAB(nbArms)
+        sumRewards = self.track_sumRewards(algname, nbArms, nbPlayers, horizon)
+        sumBestRewards = sum(MAB.Mbest(nbPlayers))
+        return max(0, sumBestRewards - sumRewards)
+    track_centralizedRegret.unit = "Centralized regret"
+
+    def track_meanCentralizedRegret(self, algname, nbArms, nbPlayers, horizon):
+        return self.track_centralizedRegret(algname, nbArms, nbPlayers, horizon) / horizon
+    track_centralizedRegret.unit = "Mean centralized regret"
+
+    def track_collisions(self, algname, nbArms, nbPlayers, horizon):
+        _, collisions = self.full_simulation(algname, nbArms, nbPlayers, horizon)
         return sum(collisions)
-    track_collisions.unit = "collisions"
+    track_collisions.unit = "Total collisions"
+
+    def track_meanCollisions(self, algname, nbArms, nbPlayers, horizon):
+        _, collisions = self.full_simulation(algname, nbArms, nbPlayers, horizon)
+        return sum(collisions) / horizon
+    track_collisions.unit = "Mean collisions"
 

@@ -126,15 +126,7 @@ class SP:
     # ------- Memory benchmarks -------
     # https://asv.readthedocs.io/en/stable/writing_benchmarks.html#memory
 
-    def mem_createAlgorithm(self, algname, nbArms, horizon):
-        MAB = make_MAB(nbArms)
-        alg = algorithm_map[algname](nbArms)
-        alg.startGame()
-        for t in range(horizon):
-            arm = alg.choice()
-            reward = MAB.draw(arm)
-            alg.getReward(arm, reward)
-        return alg
+    mem_createAlgorithm = full_simulation
 
     # ------- Peak memory benchmarks -------
     # https://asv.readthedocs.io/en/stable/writing_benchmarks.html#peak-memory
@@ -144,48 +136,53 @@ class SP:
     # ------- Timing benchmarks -------
     # https://asv.readthedocs.io/en/stable/writing_benchmarks.html#timing
 
-    def time_choice_and_getReward(self, algname, nbArms, horizon):
-        MAB = make_MAB(nbArms)
-        alg = algorithm_map[algname](nbArms)
-        alg.startGame()
-        for t in range(horizon):
-            arm = alg.choice()
-            reward = MAB.draw(arm)
-            alg.getReward(arm, reward)
+    time_choice_and_getReward = full_simulation
 
     # ------- Tracking benchmarks -------
     # https://asv.readthedocs.io/en/stable/writing_benchmarks.html#tracking
 
-    def track_sumReward(self, algname, nbArms, horizon):
+    def full_simulation(self, algname, nbArms, horizon):
         MAB = make_MAB(nbArms)
         alg = algorithm_map[algname](nbArms)
         alg.startGame()
         sumReward = 0
+        choices = [-1] * horizon
         for t in range(horizon):
             arm = alg.choice()
             reward = MAB.draw(arm)
             sumReward += reward
             alg.getReward(arm, reward)
+            choices[t] = arm
+        bestArmChoice = len([c for c in choices if c == (nbArms - 1)])
+        return sumReward, bestArmChoice
+
+    def track_sumReward(self, algname, nbArms, horizon):
+        sumReward, _ = self.full_simulation(algname, nbArms, horizon)
         return sumReward
-    track_sumReward.unit = "reward"
+    track_sumReward.unit = "Sum reward"
+
+    def track_meanReward(self, algname, nbArms, horizon):
+        sumReward, _ = self.full_simulation(algname, nbArms, horizon)
+        return sumReward / horizon
+    track_meanReward.unit = "Mean reward"
 
     def track_regret(self, algname, nbArms, horizon):
         MAB = make_MAB(nbArms)
         sumReward = self.track_sumReward(algname, nbArms, horizon)
         sumBestReward = MAB.maxArm * horizon
-        return sumBestReward - sumReward
-    track_regret.unit = "regret"
+        return max(0, sumBestReward - sumReward)
+    track_regret.unit = "Sum regret"
+
+    def track_meanRegret(self, algname, nbArms, horizon):
+        return self.track_regret(algname, nbArms, horizon) / horizon
+    track_regret.unit = "Mean regret"
 
     def track_bestArmChoice(self, algname, nbArms, horizon):
-        MAB = make_MAB(nbArms)
-        alg = algorithm_map[algname](nbArms)
-        alg.startGame()
-        choices = [-1] * horizon
-        for t in range(horizon):
-            arm = alg.choice()
-            reward = MAB.draw(arm)
-            choices[t] = arm
-            alg.getReward(arm, reward)
-        bestArmChoice = len([c for c in choices if c == (nbArms - 1)])
+        _, bestArmChoice = self.full_simulation(algname, nbArms, horizon)
         return bestArmChoice
-    track_bestArmChoice.unit = "number"
+    track_bestArmChoice.unit = "Best arm selections"
+
+    def track_bestArmChoiceRate(self, algname, nbArms, horizon):
+        _, bestArmChoice = self.full_simulation(algname, nbArms, horizon)
+        return bestArmChoice / horizon
+    track_bestArmChoice.unit = "Best arm sample rate"

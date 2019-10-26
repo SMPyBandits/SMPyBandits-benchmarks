@@ -8,8 +8,8 @@
 # - Date: October 2019
 SHELL=/usr/bin/env /bin/bash
 
-
 default:	pull run_stderr publish send preview
+quick:	pull run_quick
 
 send:	send_zamok
 send_zamok:
@@ -30,9 +30,11 @@ run:
 run_profile:
 	asv run --profile
 run_profile_stderr:
-	asv run --profile --show-stderr
+	asv run --profile --show-stderr --verbose
 run_stderr:
-	asv run --show-stderr
+	asv run --show-stderr --verbose
+run_quick:
+	asv run --quick --show-stderr --verbose
 dev:
 	asv dev
 continuous:
@@ -42,7 +44,7 @@ find:
 rm:
 	asv rm
 publish:
-	asv publish
+	asv publish --verbose
 preview:
 	asv preview
 profile:

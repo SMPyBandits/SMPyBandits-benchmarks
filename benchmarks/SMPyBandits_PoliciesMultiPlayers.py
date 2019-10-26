@@ -100,7 +100,7 @@ print("values_nbPlayers =", values_nbPlayers)  # DEBUG
 print("values_horizonMP =", values_horizonMP)  # DEBUG
 
 
-class SMPyBandits_PoliciesMultiPlayers:
+class MP:
     """
     A benchmark of SMPyBandits PoliciesMultiPlayers. In progress.
 
@@ -143,11 +143,16 @@ class SMPyBandits_PoliciesMultiPlayers:
         for t in range(horizon):
             # chose one arm, for each player
             choices = [ children[i].choice() for i in range(nbPlayers) ]
+            sensing = [ MAB.draw(k) for k in range(nbArms) ]
             for k in range(nbArms):
                 players_who_played_k = [ i for i in range(nbPlayers) if choices[i] == k ]
-                reward = MAB.draw(k) if len(players_who_played_k) == 1 else 0  # sample a reward
+                reward = sensing[k] if len(players_who_played_k) == 1 else 0  # sample a reward
                 for i in players_who_played_k:
-                    children[i].getReward(k, reward)
+                    if len(players_who_played_k) > 1:
+                        children[i].handleCollision(k, sensing[k])
+                    else:
+                        children[i].getReward(k, reward)
+                        sumRewards[i] += reward
         return my_policy_MP
 
     # ------- Peak memory benchmarks -------
@@ -167,11 +172,16 @@ class SMPyBandits_PoliciesMultiPlayers:
         for t in range(horizon):
             # chose one arm, for each player
             choices = [ children[i].choice() for i in range(nbPlayers) ]
+            sensing = [ MAB.draw(k) for k in range(nbArms) ]
             for k in range(nbArms):
                 players_who_played_k = [ i for i in range(nbPlayers) if choices[i] == k ]
-                reward = MAB.draw(k) if len(players_who_played_k) == 1 else 0  # sample a reward
+                reward = sensing[k] if len(players_who_played_k) == 1 else 0  # sample a reward
                 for i in players_who_played_k:
-                    children[i].getReward(k, reward)
+                    if len(players_who_played_k) > 1:
+                        children[i].handleCollision(k, sensing[k])
+                    else:
+                        children[i].getReward(k, reward)
+                        sumRewards[i] += reward
 
     # ------- Tracking benchmarks -------
     # https://asv.readthedocs.io/en/stable/writing_benchmarks.html#tracking
@@ -186,12 +196,16 @@ class SMPyBandits_PoliciesMultiPlayers:
         for t in range(horizon):
             # chose one arm, for each player
             choices = [ children[i].choice() for i in range(nbPlayers) ]
+            sensing = [ MAB.draw(k) for k in range(nbArms) ]
             for k in range(nbArms):
                 players_who_played_k = [ i for i in range(nbPlayers) if choices[i] == k ]
-                reward = MAB.draw(k) if len(players_who_played_k) == 1 else 0  # sample a reward
+                reward = sensing[k] if len(players_who_played_k) == 1 else 0  # sample a reward
                 for i in players_who_played_k:
-                    children[i].getReward(k, reward)
-                    sumRewards[i] += reward
+                    if len(players_who_played_k) > 1:
+                        children[i].handleCollision(k, sensing[k])
+                    else:
+                        children[i].getReward(k, reward)
+                        sumRewards[i] += reward
         return sum(sumRewards)
     track_sumRewards.unit = "sum rewards"
 
@@ -212,13 +226,16 @@ class SMPyBandits_PoliciesMultiPlayers:
         for t in range(horizon):
             # chose one arm, for each player
             choices = [ children[i].choice() for i in range(nbPlayers) ]
+            sensing = [ MAB.draw(k) for k in range(nbArms) ]
             for k in range(nbArms):
                 players_who_played_k = [ i for i in range(nbPlayers) if choices[i] == k ]
-                reward = MAB.draw(k) if len(players_who_played_k) == 1 else 0  # sample a reward
+                reward = sensing[k] if len(players_who_played_k) == 1 else 0  # sample a reward
                 for i in players_who_played_k:
                     if len(players_who_played_k) > 1:
                         collisions[i] += 1
-                    children[i].getReward(k, reward)
+                        children[i].handleCollision(k, sensing[k])
+                    else:
+                        children[i].getReward(k, reward)
         return sum(collisions)
     track_collisions.unit = "collisions"
 

@@ -126,7 +126,7 @@ class SMPyBandits_PoliciesMultiPlayers:
 
     def setup(self, algname, nbArms, nbPlayers, horizon):
         self.MAB = make_MAB(nbArms)
-        self.my_policy_MP = algorithmMP_map[algname](nbArms, nbPlayers)
+        self.my_policy_MP = algorithmMP_map[algname](nbPlayers, nbArms)
         self.nbArms = nbArms
         self.nbPlayers = nbPlayers
         self.horizon = horizon
@@ -136,7 +136,7 @@ class SMPyBandits_PoliciesMultiPlayers:
 
     def mem_createAlgorithms(self, algname, nbArms, nbPlayers, horizon):
         MAB = make_MAB(nbArms)
-        my_policy_MP = algorithmMP_map[algname](nbArms, nbPlayers)
+        my_policy_MP = algorithmMP_map[algname](nbPlayers, nbArms)
         children = my_policy_MP.children             # get a list of usable single-player policies
         for one_policy in children:
             one_policy.startGame()                       # start the game
@@ -144,7 +144,7 @@ class SMPyBandits_PoliciesMultiPlayers:
             # chose one arm, for each player
             choices = [ children[i].choice() for i in range(nbPlayers) ]
             for k in range(nbArms):
-                players_who_played_k = [ choices[i] for i in range(nbPlayers) if choices[i] == k ]
+                players_who_played_k = [ i for i in range(nbPlayers) if choices[i] == k ]
                 reward = MAB.draw(k) if len(players_who_played_k) == 1 else 0  # sample a reward
                 for i in players_who_played_k:
                     children[i].getReward(k, reward)
@@ -160,7 +160,7 @@ class SMPyBandits_PoliciesMultiPlayers:
 
     def time_choice_and_getReward(self, algname, nbArms, nbPlayers, horizon):
         MAB = make_MAB(nbArms)
-        my_policy_MP = algorithmMP_map[algname](nbArms, nbPlayers)
+        my_policy_MP = algorithmMP_map[algname](nbPlayers, nbArms)
         children = my_policy_MP.children             # get a list of usable single-player policies
         for one_policy in children:
             one_policy.startGame()                       # start the game
@@ -168,7 +168,7 @@ class SMPyBandits_PoliciesMultiPlayers:
             # chose one arm, for each player
             choices = [ children[i].choice() for i in range(nbPlayers) ]
             for k in range(nbArms):
-                players_who_played_k = [ choices[i] for i in range(nbPlayers) if choices[i] == k ]
+                players_who_played_k = [ i for i in range(nbPlayers) if choices[i] == k ]
                 reward = MAB.draw(k) if len(players_who_played_k) == 1 else 0  # sample a reward
                 for i in players_who_played_k:
                     children[i].getReward(k, reward)
@@ -178,7 +178,7 @@ class SMPyBandits_PoliciesMultiPlayers:
 
     def track_sumRewards(self, algname, nbArms, nbPlayers, horizon):
         MAB = make_MAB(nbArms)
-        my_policy_MP = algorithmMP_map[algname](nbArms, nbPlayers)
+        my_policy_MP = algorithmMP_map[algname](nbPlayers, nbArms)
         children = my_policy_MP.children             # get a list of usable single-player policies
         for one_policy in children:
             one_policy.startGame()                       # start the game
@@ -187,7 +187,7 @@ class SMPyBandits_PoliciesMultiPlayers:
             # chose one arm, for each player
             choices = [ children[i].choice() for i in range(nbPlayers) ]
             for k in range(nbArms):
-                players_who_played_k = [ choices[i] for i in range(nbPlayers) if choices[i] == k ]
+                players_who_played_k = [ i for i in range(nbPlayers) if choices[i] == k ]
                 reward = MAB.draw(k) if len(players_who_played_k) == 1 else 0  # sample a reward
                 for i in players_who_played_k:
                     children[i].getReward(k, reward)
@@ -204,7 +204,7 @@ class SMPyBandits_PoliciesMultiPlayers:
 
     def track_collisions(self, algname, nbArms, nbPlayers, horizon):
         MAB = make_MAB(nbArms)
-        my_policy_MP = algorithmMP_map[algname](nbArms, nbPlayers)
+        my_policy_MP = algorithmMP_map[algname](nbPlayers, nbArms)
         children = my_policy_MP.children             # get a list of usable single-player policies
         for one_policy in children:
             one_policy.startGame()                       # start the game
@@ -213,11 +213,11 @@ class SMPyBandits_PoliciesMultiPlayers:
             # chose one arm, for each player
             choices = [ children[i].choice() for i in range(nbPlayers) ]
             for k in range(nbArms):
-                players_who_played_k = [ choices[i] for i in range(nbPlayers) if choices[i] == k ]
+                players_who_played_k = [ i for i in range(nbPlayers) if choices[i] == k ]
                 reward = MAB.draw(k) if len(players_who_played_k) == 1 else 0  # sample a reward
-                if len(players_who_played_k) > 1:
-                    collisions[i] += 1
                 for i in players_who_played_k:
+                    if len(players_who_played_k) > 1:
+                        collisions[i] += 1
                     children[i].getReward(k, reward)
         return sum(collisions)
     track_collisions.unit = "collisions"

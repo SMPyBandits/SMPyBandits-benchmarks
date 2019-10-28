@@ -26,7 +26,7 @@ machine:
 setup:
 	asv setup
 run:
-	asv run
+	asv run --verbose
 run_profile:
 	asv run --profile
 run_profile_stderr:
@@ -46,7 +46,7 @@ rm:
 publish:
 	asv publish --verbose
 preview:
-	asv preview
+	asv preview --verbose
 profile:
 	asv profile
 update:

@@ -155,7 +155,7 @@ class MP:
                     else:
                         sumRewards[i] += reward
                         children[i].getReward(k, reward)
-        return sumRewards, collisions
+        return my_policy_MP, sumRewards, collisions
 
     # ------- Memory benchmarks -------
     # https://asv.readthedocs.io/en/stable/writing_benchmarks.html#memory
@@ -176,12 +176,12 @@ class MP:
     # https://asv.readthedocs.io/en/stable/writing_benchmarks.html#tracking
 
     def track_sumRewards(self, algname, nbArms, nbPlayers, horizon):
-        sumRewards, _ = self.full_simulation(algname, nbArms, nbPlayers, horizon)
+        _, sumRewards, _ = self.full_simulation(algname, nbArms, nbPlayers, horizon)
         return sum(sumRewards)
     track_sumRewards.unit = "Sum rewards"
 
     def track_meanSumRewards(self, algname, nbArms, nbPlayers, horizon):
-        sumRewards, _ = self.full_simulation(algname, nbArms, nbPlayers, horizon)
+        _, sumRewards, _ = self.full_simulation(algname, nbArms, nbPlayers, horizon)
         return sum(sumRewards) / horizon
     track_sumRewards.unit = "Mean sum rewards"
 
@@ -197,12 +197,12 @@ class MP:
     track_centralizedRegret.unit = "Mean centralized regret"
 
     def track_collisions(self, algname, nbArms, nbPlayers, horizon):
-        _, collisions = self.full_simulation(algname, nbArms, nbPlayers, horizon)
+        _, _, collisions = self.full_simulation(algname, nbArms, nbPlayers, horizon)
         return sum(collisions)
     track_collisions.unit = "Total collisions"
 
     def track_meanCollisions(self, algname, nbArms, nbPlayers, horizon):
-        _, collisions = self.full_simulation(algname, nbArms, nbPlayers, horizon)
+        _, _, collisions = self.full_simulation(algname, nbArms, nbPlayers, horizon)
         return sum(collisions) / horizon
     track_collisions.unit = "Mean collisions"
 

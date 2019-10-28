@@ -138,7 +138,7 @@ class SP:
             alg.getReward(arm, reward)
             choices[t] = arm
         bestArmChoice = len([c for c in choices if c == (nbArms - 1)])
-        return sumReward, bestArmChoice
+        return alg, sumReward, bestArmChoice
 
     # ------- Memory benchmarks -------
     # https://asv.readthedocs.io/en/stable/writing_benchmarks.html#memory
@@ -159,12 +159,12 @@ class SP:
     # https://asv.readthedocs.io/en/stable/writing_benchmarks.html#tracking
 
     def track_sumReward(self, algname, nbArms, horizon):
-        sumReward, _ = self.full_simulation(algname, nbArms, horizon)
+        _, sumReward, _ = self.full_simulation(algname, nbArms, horizon)
         return sumReward
     track_sumReward.unit = "Sum reward"
 
     def track_meanReward(self, algname, nbArms, horizon):
-        sumReward, _ = self.full_simulation(algname, nbArms, horizon)
+        _, sumReward, _ = self.full_simulation(algname, nbArms, horizon)
         return sumReward / horizon
     track_meanReward.unit = "Mean reward"
 
@@ -180,11 +180,11 @@ class SP:
     track_regret.unit = "Mean regret"
 
     def track_bestArmChoice(self, algname, nbArms, horizon):
-        _, bestArmChoice = self.full_simulation(algname, nbArms, horizon)
+        _, _, bestArmChoice = self.full_simulation(algname, nbArms, horizon)
         return bestArmChoice
     track_bestArmChoice.unit = "Best arm selections"
 
     def track_bestArmChoiceRate(self, algname, nbArms, horizon):
-        _, bestArmChoice = self.full_simulation(algname, nbArms, horizon)
+        _, _, bestArmChoice = self.full_simulation(algname, nbArms, horizon)
         return bestArmChoice / horizon
     track_bestArmChoice.unit = "Best arm sample rate"

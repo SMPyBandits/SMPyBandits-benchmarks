@@ -70,15 +70,20 @@ values_algorithmMP = list(algorithmMP_map.keys())
 values_nbArmsMP = [
     9,
 ]
+if CPU_COUNT >= 8:
+    values_nbArmsMP += [
+        12,
+        24,
+    ]
 
 values_nbPlayers = [
     2, 3, 6, 9
 ]
 
 values_horizonMP = [100, 250, 500, 750]
-# values_horizonMP += [
-#     1000, 1250, 1500, 1750,
-# ]
+values_horizonMP += [
+    1000, 1250, 1500, 1750,
+]
 if CPU_COUNT >= 8:
     values_horizonMP += [
         2000, 2500,  # XXX
@@ -183,18 +188,18 @@ class MP:
     def track_meanSumRewards(self, algname, nbArms, nbPlayers, horizon):
         _, sumRewards, _ = self.full_simulation(algname, nbArms, nbPlayers, horizon)
         return sum(sumRewards) / horizon
-    track_sumRewards.unit = "Mean sum rewards"
+    track_meanSumRewards.unit = "Mean sum rewards"
 
     def track_centralizedRegret(self, algname, nbArms, nbPlayers, horizon):
         MAB = make_MAB(nbArms)
         sumRewards = self.track_sumRewards(algname, nbArms, nbPlayers, horizon)
-        sumBestRewards = sum(MAB.Mbest(nbPlayers))
+        sumBestRewards = sum(MAB.Mbest(nbPlayers)) * horizon
         return max(0, sumBestRewards - sumRewards)
     track_centralizedRegret.unit = "Centralized regret"
 
     def track_meanCentralizedRegret(self, algname, nbArms, nbPlayers, horizon):
         return self.track_centralizedRegret(algname, nbArms, nbPlayers, horizon) / horizon
-    track_centralizedRegret.unit = "Mean centralized regret"
+    track_meanCentralizedRegret.unit = "Mean centralized regret"
 
     def track_collisions(self, algname, nbArms, nbPlayers, horizon):
         _, _, collisions = self.full_simulation(algname, nbArms, nbPlayers, horizon)
@@ -204,5 +209,5 @@ class MP:
     def track_meanCollisions(self, algname, nbArms, nbPlayers, horizon):
         _, _, collisions = self.full_simulation(algname, nbArms, nbPlayers, horizon)
         return sum(collisions) / horizon
-    track_collisions.unit = "Mean collisions"
+    track_meanCollisions.unit = "Mean collisions"
 

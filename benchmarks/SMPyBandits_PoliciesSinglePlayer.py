@@ -177,7 +177,11 @@ class SP:
 
     def track_meanRegret(self, algname, nbArms, horizon):
         return self.track_regret(algname, nbArms, horizon) / horizon
-    track_regret.unit = "Mean regret"
+    track_meanRegret.unit = "Mean regret"
+
+    def track_normalizedRegret(self, algname, nbArms, horizon):
+        return self.track_regret(algname, nbArms, horizon) / np.log(horizon)
+    track_normalizedRegret.unit = "Normalized regret"
 
     def track_bestArmChoice(self, algname, nbArms, horizon):
         _, _, bestArmChoice = self.full_simulation(algname, nbArms, horizon)
@@ -187,4 +191,4 @@ class SP:
     def track_bestArmChoiceRate(self, algname, nbArms, horizon):
         _, _, bestArmChoice = self.full_simulation(algname, nbArms, horizon)
         return bestArmChoice / horizon
-    track_bestArmChoice.unit = "Best arm sample rate"
+    track_bestArmChoiceRate.unit = "Best arm sample rate"

@@ -47,24 +47,27 @@ from SMPyBandits.Policies import SIC_MMAB
 
 algorithmMP_map = {
     "CentralizedCycling": lambda nbPlayers, nbArms: PoliciesMultiPlayers.CentralizedCycling(nbArms, nbPlayers),
-    "CentralizedMultiplePlay-UCB": lambda nbPlayers, nbArms: PoliciesMultiPlayers.CentralizedMultiplePlay(nbPlayers, nbArms, UCB),
-    "CentralizedMultiplePlay-klUCB": lambda nbPlayers, nbArms: PoliciesMultiPlayers.CentralizedMultiplePlay(nbPlayers, nbArms, klUCB),
-    # "CentralizedMultiplePlay-Thompson": lambda nbPlayers, nbArms: PoliciesMultiPlayers.CentralizedMultiplePlay(nbPlayers, nbArms, Thompson),
+    "Centralized-MP-UCB": lambda nbPlayers, nbArms: PoliciesMultiPlayers.CentralizedMultiplePlay(nbPlayers, nbArms, UCB),
     "rhoRand-UCB": lambda nbPlayers, nbArms: PoliciesMultiPlayers.rhoRand(nbPlayers, nbArms, UCB),
-    "rhoRand-klUCB": lambda nbPlayers, nbArms: PoliciesMultiPlayers.rhoRand(nbPlayers, nbArms, klUCB),
-    # "rhoRand-Thompson": lambda nbPlayers, nbArms: PoliciesMultiPlayers.rhoRand(nbPlayers, nbArms, Thompson),
     "rhoEst": lambda nbPlayers, nbArms: PoliciesMultiPlayers.rhoEst(nbPlayers, nbArms, UCB),
-    # "rhoLearn": lambda nbPlayers, nbArms: PoliciesMultiPlayers.rhoLearn(nbPlayers, nbArms, UCB),
-    # "rhoLearnEst": lambda nbPlayers, nbArms: PoliciesMultiPlayers.rhoLearnEst(nbPlayers, nbArms, UCB),
     "RandTopM": lambda nbPlayers, nbArms: PoliciesMultiPlayers.RandTopM(nbPlayers, nbArms, UCB),
     "MCTopM-UCB": lambda nbPlayers, nbArms: PoliciesMultiPlayers.MCTopM(nbPlayers, nbArms, UCB),
-    "MCTopM-klUCB": lambda nbPlayers, nbArms: PoliciesMultiPlayers.MCTopM(nbPlayers, nbArms, klUCB),
-    # "MCTopM-Thompson": lambda nbPlayers, nbArms: PoliciesMultiPlayers.MCTopM(nbPlayers, nbArms, Thompson),
     "Selfish-UCB": lambda nbPlayers, nbArms: PoliciesMultiPlayers.Selfish(nbPlayers, nbArms, UCB),
-    "Selfish-klUCB": lambda nbPlayers, nbArms: PoliciesMultiPlayers.Selfish(nbPlayers, nbArms, klUCB),
-    # "Selfish-Thompson": lambda nbPlayers, nbArms: PoliciesMultiPlayers.Selfish(nbPlayers, nbArms, Thompson),
     "SIC_MMAB": lambda nbPlayers, nbArms: PoliciesMultiPlayers.Selfish(nbPlayers, nbArms, SIC_MMAB),
 }
+if CPU_COUNT >= 8:
+    algorithmMP_map.update({
+        "Centralized-MP-klUCB": lambda nbPlayers, nbArms: PoliciesMultiPlayers.CentralizedMultiplePlay(nbPlayers, nbArms, klUCB),
+        "Centralized-MP-Thompson": lambda nbPlayers, nbArms: PoliciesMultiPlayers.CentralizedMultiplePlay(nbPlayers, nbArms, Thompson),
+        "rhoRand-klUCB": lambda nbPlayers, nbArms: PoliciesMultiPlayers.rhoRand(nbPlayers, nbArms, klUCB),
+        "rhoRand-Thompson": lambda nbPlayers, nbArms: PoliciesMultiPlayers.rhoRand(nbPlayers, nbArms, Thompson),
+        "rhoLearn": lambda nbPlayers, nbArms: PoliciesMultiPlayers.rhoLearn(nbPlayers, nbArms, UCB),
+        "rhoLearnEst": lambda nbPlayers, nbArms: PoliciesMultiPlayers.rhoLearnEst(nbPlayers, nbArms, UCB),
+        "MCTopM-klUCB": lambda nbPlayers, nbArms: PoliciesMultiPlayers.MCTopM(nbPlayers, nbArms, klUCB),
+        "MCTopM-Thompson": lambda nbPlayers, nbArms: PoliciesMultiPlayers.MCTopM(nbPlayers, nbArms, Thompson),
+        "Selfish-klUCB": lambda nbPlayers, nbArms: PoliciesMultiPlayers.Selfish(nbPlayers, nbArms, klUCB),
+        "Selfish-Thompson": lambda nbPlayers, nbArms: PoliciesMultiPlayers.Selfish(nbPlayers, nbArms, Thompson),
+    })
 values_algorithmMP = list(algorithmMP_map.keys())
 
 values_nbArmsMP = [

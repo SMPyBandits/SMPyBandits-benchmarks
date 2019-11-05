@@ -42,20 +42,32 @@ make_MAB = lambda nbArms: SMPyBandits.Environment.MAB({'arm_type': Arms.Bernoull
 
 algorithm_map = {
     "Uniform": Policies.Uniform,
+    "Exp3": Policies.EpsilonDecreasing,
     "UCB": Policies.UCB,
-    "EpsilonDecreasing": Policies.EpsilonDecreasing,
-    "SoftmaxDecreasing": Policies.SoftmaxDecreasing,
-    "Exp3PlusPlus": Policies.Exp3PlusPlus,
     "Thompson": Policies.Thompson,
-    "klUCB": Policies.klUCB,
-    "MOSSAnytime": Policies.MOSSAnytime,
+    "kl-UCB": Policies.klUCB,
+    "MOSS-Anytime": Policies.MOSSAnytime,
     "AdBandits": Policies.AdBandits,
-    "BESA": Policies.BESA,
-    "RCB": Policies.RCB,
-    "RCB": Policies.RCB,
-    "PHE": Policies.PHE,
-    "BayesUCB": Policies.BayesUCB,
+    "ApproximatedFHGittins": Policies.ApproximatedFHGittins,
 }
+if CPU_COUNT >= 8:
+    algorithm_map.update({
+        "Softmax": Policies.SoftmaxDecreasing,
+        "Exp3++": Policies.Exp3PlusPlus,
+        "Discounted-UCB": Policies.DiscountedUCB,
+        "Discounted-Thompson": Policies.DiscountedThompson,
+        "kl-UCB+": Policies.klUCBPlus,
+        "kl-UCB++": Policies.klUCBPlusPlus,
+        "kl-UCB-Switch": Policies.klUCBswitchAnytime,
+        "BESA": Policies.BESA,
+        "RCB": Policies.RCB,
+        "PHE": Policies.PHE,
+        "OC-UCB": Policies.OCUCB,
+        "OSSB": Policies.OSSB,
+        "Bayes-UCB": Policies.BayesUCB,
+        "Tsallis-Inf": Policies.TsallisInf,
+        "UCBoostEpsilon": Policies.UCBoostEpsilon,
+    })
 
 values_algorithm = list(algorithm_map.keys())
 
